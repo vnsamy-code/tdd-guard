@@ -26,6 +26,7 @@ import {
   createGoReporter,
   createRustReporter,
   createStorybookReporter,
+  createSwiftReporter,
 } from './factories'
 
 // Test data structure for each reporter
@@ -44,6 +45,7 @@ type ReporterName =
   | 'go'
   | 'rust'
   | 'storybook'
+  | 'swift'
 
 describe('Reporters', () => {
   const reporterData: ReporterTestData[] = []
@@ -58,6 +60,7 @@ describe('Reporters', () => {
       createGoReporter(),
       createRustReporter(),
       createStorybookReporter(),
+      createSwiftReporter(),
     ]
 
     // Run all reporters in parallel, skipping any that fail (e.g., Rust not installed)
@@ -82,6 +85,7 @@ describe('Reporters', () => {
         { name: 'go', expected: 'singlePassing' },
         { name: 'rust', expected: 'single_passing' },
         { name: 'storybook', expected: 'single-passing.stories' },
+        { name: 'swift', expected: 'CalculatorTests' },
       ]
 
       it.each(reporters)('$name reports module path', ({ name, expected }) => {
@@ -99,6 +103,7 @@ describe('Reporters', () => {
         { name: 'go', expected: 'singleFailing' },
         { name: 'rust', expected: 'single_failing' },
         { name: 'storybook', expected: 'single-failing.stories' },
+        { name: 'swift', expected: 'CalculatorTests' },
       ]
 
       it.each(reporters)('$name reports module path', ({ name, expected }) => {
@@ -116,6 +121,7 @@ describe('Reporters', () => {
         { name: 'go', expected: 'missingImport' },
         { name: 'rust', expected: 'compilation' },
         { name: 'storybook', expected: 'single-import-error.stories' },
+        { name: 'swift', expected: 'CalculatorTests' },
       ]
 
       it.each(reporters)('$name reports module path', ({ name, expected }) => {
@@ -144,6 +150,7 @@ describe('Reporters', () => {
           expected: 'calculator_tests::should_add_numbers_correctly',
         },
         { name: 'storybook', expected: 'play-test' },
+        { name: 'swift', expected: 'testAddition' },
       ]
 
       it.each(reporters)('$name reports test name', ({ name, expected }) => {
@@ -167,6 +174,7 @@ describe('Reporters', () => {
           expected: 'calculator_tests::should_add_numbers_correctly',
         },
         { name: 'storybook', expected: 'play-test' },
+        { name: 'swift', expected: 'testAddition' },
       ]
 
       it.each(reporters)('$name reports test name', ({ name, expected }) => {
@@ -190,6 +198,7 @@ describe('Reporters', () => {
         { name: 'go', expected: 'CompilationError' },
         { name: 'rust', expected: 'build' },
         { name: 'storybook', expected: 'play-test' },
+        { name: 'swift', expected: 'testAddition' },
       ]
 
       it.each(reporters)(
@@ -651,6 +660,7 @@ describe('Reporters', () => {
     const go = reporterData.find((r) => r.name === 'GoReporter')
     const rust = reporterData.find((r) => r.name === 'RustReporter')
     const storybook = reporterData.find((r) => r.name === 'StorybookReporter')
+    const swift = reporterData.find((r) => r.name === 'SwiftReporter')
 
     return {
       jest: safeExtract(jest?.[scenario], extractor),
@@ -660,6 +670,7 @@ describe('Reporters', () => {
       go: safeExtract(go?.[scenario], extractor),
       rust: safeExtract(rust?.[scenario], extractor),
       storybook: safeExtract(storybook?.[scenario], extractor),
+      swift: safeExtract(swift?.[scenario], extractor),
     }
   }
 

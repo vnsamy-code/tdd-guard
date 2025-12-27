@@ -33,7 +33,7 @@ TDD Guard ensures Claude Code follows Test-Driven Development principles. When y
 
 - Node.js 22+
 - Claude Code or Anthropic API key
-- Test framework (Jest, Vitest, Storybook, pytest, PHPUnit, Go 1.24+, or Rust with cargo/cargo-nextest)
+- Test framework (Jest, Vitest, Storybook, pytest, PHPUnit, Go 1.24+, Rust with cargo/cargo-nextest, or Swift with XCTest)
 
 ## Quick Start
 
@@ -257,6 +257,70 @@ test:
 ```
 
 **Note:** The reporter acts as a filter that passes test output through unchanged while capturing results for TDD Guard. See the [Rust reporter configuration](reporters/rust/README.md#configuration) for more details.
+
+</details>
+
+<details>
+<summary><b>Swift (XCTest)</b></summary>
+
+Add TDD Guard to your Swift package dependencies in `Package.swift`:
+
+```swift
+dependencies: [
+    .package(url: "https://github.com/nizos/tdd-guard", from: "1.0.0")
+]
+
+targets: [
+    .testTarget(
+        name: "YourAppTests",
+        dependencies: [
+            "YourApp",
+            .product(name: "TDDGuardXCTest", package: "tdd-guard")
+        ]
+    )
+]
+```
+
+Create a test observer bootstrap file to register the reporter:
+
+```swift
+// Tests/YourAppTests/TestObserverBootstrap.swift
+import XCTest
+import TDDGuardXCTest
+
+@objc(TestObserverBootstrap)
+class TestObserverBootstrap: NSObject {
+    override init() {
+        super.init()
+
+        let projectRoot = ProcessInfo.processInfo.environment["PROJECT_ROOT"]
+            ?? FileManager.default.currentDirectoryPath
+
+        let observer = TDDGuardObserver(projectRoot: projectRoot)
+        XCTestObservationCenter.shared.addTestObserver(observer)
+    }
+}
+```
+
+For **iOS/macOS Xcode projects**, add to your test target's `Info.plist`:
+
+```xml
+<key>NSPrincipalClass</key>
+<string>$(PRODUCT_MODULE_NAME).TestObserverBootstrap</string>
+```
+
+For **Linux/SPM command-line projects**, use `XCTMain` with the observer (Swift 5.4+):
+
+```swift
+// Tests/LinuxMain.swift
+import XCTest
+import TDDGuardXCTest
+
+let observer = TDDGuardObserver(projectRoot: "/Users/username/projects/my-app")
+XCTMain(observers: [observer])
+```
+
+**Note:** The reporter uses XCTest's observation protocol to capture test results in real-time. Works on iOS, macOS, and Linux. See the [Swift reporter configuration](reporters/swift/README.md) for detailed setup instructions and troubleshooting.
 
 </details>
 
