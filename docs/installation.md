@@ -12,12 +12,6 @@ Using npm:
 npm install -g tdd-guard
 ```
 
-Or using Homebrew:
-
-```bash
-brew install tdd-guard
-```
-
 ## 2. Configure Claude Code Hooks
 
 Add the following hooks to your settings file. See [Settings File Locations](configuration.md#settings-file-locations) for guidance on which file to use.
