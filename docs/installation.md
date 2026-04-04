@@ -6,6 +6,9 @@ This document is a reference for manual setup or troubleshooting.
 
 ## 1. Install TDD Guard
 
+> **Deprecated:** Direct npm and Homebrew installations are no longer recommended.
+> Use the plugin installation instead — see the [README](../README.md#installation).
+
 Using npm:
 
 ```bash
