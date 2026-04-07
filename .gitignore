@@ -92,3 +92,7 @@ docs/internal/
 target/
 **/*.rs.bk
 *.pdb
+
+# Swift build artifacts
+reporters/swift/.build/
+reporters/test/artifacts/swift/**/.build/

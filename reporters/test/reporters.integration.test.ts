@@ -24,6 +24,8 @@ import {
   createRustReporter,
   createStorybookReporter,
   createRspecReporter,
+  createSwiftXCTestReporter,
+  createSwiftTestingReporter,
 } from './factories'
 
 // Test data structure for each reporter
@@ -43,6 +45,8 @@ type ReporterName =
   | 'rust'
   | 'storybook'
   | 'rspec'
+  | 'swift-xctest'
+  | 'swift-testing'
 
 describe('Reporters', () => {
   const reporterData: ReporterTestData[] = []
@@ -58,6 +62,8 @@ describe('Reporters', () => {
       createRustReporter(),
       createStorybookReporter(),
       createRspecReporter(),
+      createSwiftXCTestReporter(),
+      createSwiftTestingReporter(),
     ]
 
     // Run all reporters in parallel, skipping any that fail (e.g., Rust not installed)
@@ -83,6 +89,8 @@ describe('Reporters', () => {
         { name: 'rust', expected: 'single_passing' },
         { name: 'storybook', expected: 'single-passing.stories' },
         { name: 'rspec', expected: 'single_passing_spec.rb' },
+        { name: 'swift-xctest', expected: 'CalculatorTests' },
+        { name: 'swift-testing', expected: 'CalculatorTests' },
       ]
 
       it.each(reporters)('$name reports module path', ({ name, expected }) => {
@@ -101,6 +109,8 @@ describe('Reporters', () => {
         { name: 'rust', expected: 'single_failing' },
         { name: 'storybook', expected: 'single-failing.stories' },
         { name: 'rspec', expected: 'single_failing_spec.rb' },
+        { name: 'swift-xctest', expected: 'CalculatorTests' },
+        { name: 'swift-testing', expected: 'CalculatorTests' },
       ]
 
       it.each(reporters)('$name reports module path', ({ name, expected }) => {
@@ -119,6 +129,8 @@ describe('Reporters', () => {
         { name: 'rust', expected: 'compilation' },
         { name: 'storybook', expected: 'single-import-error.stories' },
         { name: 'rspec', expected: 'single_import_error_spec.rb' },
+        { name: 'swift-xctest', expected: 'compilation' },
+        { name: 'swift-testing', expected: 'compilation' },
       ]
 
       it.each(reporters)('$name reports module path', ({ name, expected }) => {
@@ -148,6 +160,8 @@ describe('Reporters', () => {
         },
         { name: 'storybook', expected: 'play-test' },
         { name: 'rspec', expected: 'should add numbers correctly' },
+        { name: 'swift-xctest', expected: 'testShouldAddNumbersCorrectly' },
+        { name: 'swift-testing', expected: 'testShouldAddNumbersCorrectly' },
       ]
 
       it.each(reporters)('$name reports test name', ({ name, expected }) => {
@@ -172,6 +186,8 @@ describe('Reporters', () => {
         },
         { name: 'storybook', expected: 'play-test' },
         { name: 'rspec', expected: 'should add numbers correctly' },
+        { name: 'swift-xctest', expected: 'testShouldAddNumbersCorrectly' },
+        { name: 'swift-testing', expected: 'testShouldAddNumbersCorrectly' },
       ]
 
       it.each(reporters)('$name reports test name', ({ name, expected }) => {
@@ -199,6 +215,8 @@ describe('Reporters', () => {
           name: 'rspec',
           expected: 'LoadError: cannot load such file -- non_existent_module',
         },
+        { name: 'swift-xctest', expected: 'build' },
+        { name: 'swift-testing', expected: 'build' },
       ]
 
       it.each(reporters)(
@@ -245,6 +263,14 @@ describe('Reporters', () => {
           name: 'rspec',
           expected:
             'single_passing_spec.rb::Calculator should add numbers correctly',
+        },
+        {
+          name: 'swift-xctest',
+          expected: 'CalculatorTests/testShouldAddNumbersCorrectly',
+        },
+        {
+          name: 'swift-testing',
+          expected: 'CalculatorTests/testShouldAddNumbersCorrectly',
         },
       ]
 
@@ -295,6 +321,14 @@ describe('Reporters', () => {
           expected:
             'single_failing_spec.rb::Calculator should add numbers correctly',
         },
+        {
+          name: 'swift-xctest',
+          expected: 'CalculatorTests/testShouldAddNumbersCorrectly',
+        },
+        {
+          name: 'swift-testing',
+          expected: 'CalculatorTests/testShouldAddNumbersCorrectly',
+        },
       ]
 
       it.each(reporters)(
@@ -329,6 +363,8 @@ describe('Reporters', () => {
           expected:
             'single_import_error_spec.rb::LoadError: cannot load such file -- non_existent_module',
         },
+        { name: 'swift-xctest', expected: 'compilation/build' },
+        { name: 'swift-testing', expected: 'compilation/build' },
       ]
 
       it.each(reporters)(
@@ -354,6 +390,8 @@ describe('Reporters', () => {
         'go',
         'rust',
         'rspec',
+        'swift-xctest',
+        'swift-testing',
       ]
 
       it.each(reporters)('%s reports passing state', (reporter) => {
@@ -375,6 +413,8 @@ describe('Reporters', () => {
         'rust',
         'storybook',
         'rspec',
+        'swift-xctest',
+        'swift-testing',
       ]
 
       it.each(reporters)('%s reports failing state', (reporter) => {
@@ -399,6 +439,8 @@ describe('Reporters', () => {
         { name: 'rust', expected: 'failed' },
         { name: 'storybook', expected: 'failed' },
         { name: 'rspec', expected: 'failed' },
+        { name: 'swift-xctest', expected: 'failed' },
+        { name: 'swift-testing', expected: 'failed' },
       ]
 
       it.each(reporters)(
@@ -447,6 +489,8 @@ describe('Reporters', () => {
           expected: ['expected', '5', 'to be', '6'],
         },
         { name: 'rspec', expected: ['expected: 6', 'got: 5'] },
+        { name: 'swift-xctest', expected: 'XCTAssertEqual failed' },
+        { name: 'swift-testing', expected: '#expect' },
       ]
 
       it.each(reporters)(
@@ -481,6 +525,8 @@ describe('Reporters', () => {
         { name: 'rust', expected: '6' }, // Successfully extracts expected value
         { name: 'storybook', expected: undefined },
         { name: 'rspec', expected: undefined },
+        { name: 'swift-xctest', expected: '6' },
+        { name: 'swift-testing', expected: undefined },
       ]
 
       it.each(reporters)(
@@ -505,6 +551,8 @@ describe('Reporters', () => {
         { name: 'rust', expected: '5' }, // Successfully extracts actual value
         { name: 'storybook', expected: undefined },
         { name: 'rspec', expected: undefined },
+        { name: 'swift-xctest', expected: '5' },
+        { name: 'swift-testing', expected: undefined },
       ]
 
       it.each(reporters)(
@@ -566,6 +614,8 @@ describe('Reporters', () => {
             'single_import_error_spec.rb',
           ],
         },
+        { name: 'swift-xctest', expected: ['NonExistentModule'] },
+        { name: 'swift-testing', expected: ['NonExistentModule'] },
       ]
 
       it.each(reporters)(
@@ -596,6 +646,8 @@ describe('Reporters', () => {
         { name: 'rust', expected: 'passed' },
         { name: 'storybook', expected: 'passed' },
         { name: 'rspec', expected: 'passed' },
+        { name: 'swift-xctest', expected: 'passed' },
+        { name: 'swift-testing', expected: 'passed' },
       ]
 
       it.each(reporters)(
@@ -620,6 +672,8 @@ describe('Reporters', () => {
         { name: 'rust', expected: 'failed' },
         { name: 'storybook', expected: 'failed' },
         { name: 'rspec', expected: 'failed' },
+        { name: 'swift-xctest', expected: 'failed' },
+        { name: 'swift-testing', expected: 'failed' },
       ]
 
       it.each(reporters)(
@@ -644,6 +698,8 @@ describe('Reporters', () => {
         { name: 'rust', expected: 'failed' },
         { name: 'storybook', expected: 'failed' },
         { name: 'rspec', expected: 'failed' },
+        { name: 'swift-xctest', expected: 'failed' },
+        { name: 'swift-testing', expected: 'failed' },
       ]
 
       it.each(reporters)(
@@ -696,6 +752,12 @@ describe('Reporters', () => {
     const rust = reporterData.find((r) => r.name === 'RustReporter')
     const storybook = reporterData.find((r) => r.name === 'StorybookReporter')
     const rspec = reporterData.find((r) => r.name === 'RSpecReporter')
+    const swiftXCTest = reporterData.find(
+      (r) => r.name === 'SwiftXCTestReporter'
+    )
+    const swiftTesting = reporterData.find(
+      (r) => r.name === 'SwiftTestingReporter'
+    )
 
     return {
       jest: safeExtract(jest?.[scenario], extractor),
@@ -706,6 +768,8 @@ describe('Reporters', () => {
       rust: safeExtract(rust?.[scenario], extractor),
       rspec: safeExtract(rspec?.[scenario], extractor),
       storybook: safeExtract(storybook?.[scenario], extractor),
+      'swift-xctest': safeExtract(swiftXCTest?.[scenario], extractor),
+      'swift-testing': safeExtract(swiftTesting?.[scenario], extractor),
     }
   }
 
